@@ -6,6 +6,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , verify_(config.getVerify())
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
+  , proxy_(config.getProxy())
   , errorCallback_([&](const std::string& err){})
   , responseErrorCallback([&](const HttpResponse& err){})
 {}
@@ -17,6 +18,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config,
   , verify_(config.getVerify())
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
+  , proxy_(config.getProxy())
   , errorCallback_(std::move(errorCallback))
   , responseErrorCallback(std::move(responseErrorCallback))
 {}
@@ -171,6 +173,8 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     } else {
         curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0);
     }
+
+    curlWrapper.setOption(CURLOPT_PROXY, proxy_.c_str());
 
     curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, connectTimeout_);
     curlWrapper.setOption(CURLOPT_URL, url.value().c_str());

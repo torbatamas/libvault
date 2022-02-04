@@ -157,6 +157,7 @@ namespace Vault {
     bool verify_;
     long connectTimeout_;
     std::filesystem::path caBundle_;
+    std::string proxy_;
     HttpErrorCallback errorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback, const HttpErrorCallback& errorCallback) const;
@@ -238,6 +239,7 @@ namespace Vault {
     Port getPort() { return port_; }
     Namespace getNamespace() { return ns_; }
     std::filesystem::path getCaBundle() { return caBundle_; }
+    std::string getProxy() { return proxy_; }
 
   private:
     Config()
@@ -249,6 +251,7 @@ namespace Vault {
       , port_(Port{"8200"})
       , ns_("")
       , caBundle_()
+      , proxy_("")
       {}
 
     bool tls_;
@@ -259,6 +262,7 @@ namespace Vault {
     Port port_;
     Namespace ns_;
     std::filesystem::path caBundle_;
+    std::string proxy_;
   };
 
   class ConfigBuilder {
@@ -275,6 +279,7 @@ namespace Vault {
     ConfigBuilder &withNamespace(Namespace ns);
     ConfigBuilder &withConnectTimeout(ConnectTimeout timeout);
     ConfigBuilder &withCaBundle(const std::filesystem::path &caBundle);
+    ConfigBuilder &withProxy(std::string &proxy);
     Config &build();
 
   private:
@@ -307,6 +312,7 @@ namespace Vault {
     [[nodiscard]] virtual const HttpClient &getHttpClient() const { return httpClient_; }
     [[nodiscard]] virtual AuthenticationStrategy &getAuthenticationStrategy() const { return authStrategy_; }
     [[nodiscard]] virtual std::filesystem::path getCaBundle() const { return caBundle_; }
+    [[nodiscard]] virtual std::string getProxy() const { return proxy_; }
 
   private:
     bool debug_;
@@ -318,6 +324,7 @@ namespace Vault {
     HttpClient httpClient_;
     AuthenticationStrategy &authStrategy_;
     std::filesystem::path caBundle_;
+    std::string proxy_;
   };
 
   class HttpConsumer {

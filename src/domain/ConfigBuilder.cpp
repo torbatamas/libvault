@@ -40,6 +40,11 @@ Vault::ConfigBuilder& Vault::ConfigBuilder::withCaBundle(const std::filesystem::
   return *this;
 }
 
+Vault::ConfigBuilder& Vault::ConfigBuilder::withProxy(std::string &proxy) {
+  config_.proxy_ = proxy;
+  return *this;
+}
+
 Vault::Config& Vault::ConfigBuilder::build() {
   return config_;
 }

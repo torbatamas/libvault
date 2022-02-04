@@ -10,6 +10,7 @@ Vault::Client::Client(Vault::Config& config, AuthenticationStrategy& authStrateg
   , httpClient_(HttpClient(config))
   , debug_(config.getDebug())
   , caBundle_(config.getCaBundle())
+  , proxy_(config.getProxy())
 {
   if (auto result = authStrategy_.authenticate(*this)) {
     token_ = result.value().token;
@@ -28,6 +29,7 @@ Vault::Client::Client(Vault::Config& config,
   , httpClient_(HttpClient(config, std::move(httpErrorCallback), std::move(responseErrorCallback)))
   , debug_(config.getDebug())
   , caBundle_(config.getCaBundle())
+  , proxy_(config.getProxy())
 {
   if (auto result = authStrategy_.authenticate(*this)) {
     token_ = result.value().token;
@@ -44,6 +46,7 @@ Vault::Client::Client(const Vault::Client& other, Vault::Token token)
   , debug_(other.getDebug())
   , token_(std::move(token))
   , caBundle_(other.getCaBundle())
+  , proxy_(other.getProxy())
 {}
 
 Vault::Url Vault::Client::getUrl(const std::string& base, const Vault::Path& path) const {
